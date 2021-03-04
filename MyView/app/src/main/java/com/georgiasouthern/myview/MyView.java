@@ -30,7 +30,7 @@ public class MyView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //canvas.drawColor(Color.rgb(200,200,100));
+        canvas.drawColor(Color.rgb(200,200,100));
         Paint paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setTextSize(72);
