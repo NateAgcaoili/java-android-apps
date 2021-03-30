@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.nio.channels.AsynchronousChannelGroup;
+
 public class MainActivity extends AppCompatActivity {
     ImageView iv;
 
@@ -36,12 +38,13 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < w; i++) {
                 for (int j = 0; j < h; j++) {
                     int c = bm.getPixel(i, j);
-                    int b = c &  0xff;
+                    int b = c & 0xff;
                     int g = (c >> 8) & 0xff;
                     int r = (c >> 16) & 0xff;
+                    a[i][j] = (r+g+b)/3;
                     int color = 0xff000000;
-                    color |= (a[i][j]<<16) | (a[i][j]<<8) | (a[i][j]);
-                    bm.setPixel(i, j, a[i][j]);
+                    color |= (a[i][j]<<16) |(a[i][j]<<8) | (a[i][j]);
+                    bm2.setPixel(i, j, color);
                 }
             }
             return bm2;
