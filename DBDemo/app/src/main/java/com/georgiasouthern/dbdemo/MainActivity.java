@@ -1,8 +1,9 @@
-package com.georgiasouthern.dbdemo;
+                                                                                                                                                                    package com.georgiasouthern.dbdemo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +31,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onSelect(View view) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select * from mytable where id=?",
+                new String[]{etId.getText().toString()});
+        if (cursor.moveToFirst()) {
+            etVal.setText(cursor.getString(1));
+        } else {
+            etVal.setText("[null]");
+        }
+    }
 
+    public void onUpdate(View view) {
+        SQLiteDatabase dbWrite = helper.getWritableDatabase();
+        SQLiteDatabase db = helper.getReadableDatabase();
+        ContentValues row = new ContentValues();
+        row.put("id", etId.getText().toString());
+        row.put("val", etVal.getText().toString());
+        Cursor cursor = db.rawQuery("select * from mytable where id=?",
+                new String[]{etId.getText().toString()});
+        if (cursor.moveToFirst()) {
+            dbWrite.update("mytable", row, "id=?", new String[]{etId.getText().toString()});
+        } else {
+            db.insert("mytable", null, row);
+        }
     }
 }
