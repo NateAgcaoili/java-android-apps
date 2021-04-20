@@ -6,6 +6,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -22,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onButtonClick(View view) {
-        String s = "https://api.openweathermap.org/2.5/weather?q=";
+        String s = "https://api.openweathermap.org/data/2.5/weather?q=";
         EditText et = findViewById(R.id.editTextTextPersonName);
         s += et.getText().toString();
         s += "&APPID=0a898072afd99c0538a46a0714c89fa7";
@@ -48,14 +53,32 @@ public class MainActivity extends AppCompatActivity {
                 }
                 reader.close();
                 return buffer.toString();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
             return null;
         }
 
         protected void onPostExecute(String result) {
-            
+            try {
+                JSONObject jo = new JSONObject(result);
+                JSONArray ja = jo.getJSONArray("weather");
+                JSONObject jo1 = ja.getJSONObject(0);
+                String desc = jo1.getString("description");
+                TextView tvDesc = findViewById(R.id.tvDesc);
+                tvDesc.setText(desc);
+                JSONObject joMain = jo.getJSONObject("main");
+                double temp = joMain.getDouble("temp");
+                TextView tvTemp = findViewById(R.id.tvTemp);
+                tvTemp.setText(""+temp);
+                JSONObject joWind = jo.getJSONObject("wind");
+                double windSpeed = joWind.getDouble("speed");
+                TextView tvWind = findViewById(R.id.tvWind);
+                tvWind.setText("" + windSpeed);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
